@@ -1,5 +1,8 @@
 #include <Arduino.h>
 #include <math.h>
+#include "digitalFilter.h"
+#define NUMTHREADS 2 //Deve-se sempre declarar o NUMTHREADS antes de "inindThread.h"
+#include "inindThread.h"
 
 // Pinos para o PWM
 #define pinLED1 13 // Configura o pino de Saida do LED
@@ -11,7 +14,7 @@
 const int PONTOS[] = {0, 2 * NPONTOS, 2 * NPONTOS, 4 * NPONTOS};
 #define Freq 15.0
 #define T (1.0 / Freq)
-#define DELAY_US ((unsigned int)((T / PONTOS[3]) * 1000000.0))
+#define SIN_INTERVAL ((unsigned int)((T / PONTOS[3]) * 1000000.0)) //Tempo em microsegundos
 
 int count = 0;
 float AMPLITUDE = 2.0;            // Amplitude é de 0 a Vmax
@@ -43,7 +46,7 @@ void ledFunc() // Faz a leitura do sinal Analogico
   digitalWrite(pinLED1, !digitalRead(pinLED1));
 }
 
-void AnalogWriteFunc()
+void sinFunc()
 {
   const int8_t aux = round(count / NPONTOS);
   switch (round(count / NPONTOS))
@@ -75,15 +78,8 @@ void setup()
   pinMode(pinLED1, OUTPUT); // Habilita interrupções globais
   analogWrite(PINNEG, 0);
   analogWrite(PINPOS, 0);
+  threadSetup(sinFunc,SIN_INTERVAL,ledFunc,500000);//parametros:funcão,intervalo,funcão,intervalo,...
+  Timer1.initialize(1); //Muda a thread para uma base de tempo em microsegundos
 }
 
-void loop()
-{
-  unsigned long currentMicros = micros();
-  if (((currentMicros - previousMicros >= 0) && (currentMicros - previousMicros >= DELAY_US)) ||
-      ((currentMicros - previousMicros < 0) && (currentMicros - 0 + 16383 - previousMicros >= DELAY_US)))
-  {
-    previousMicros = currentMicros;
-    AnalogWriteFunc();
-  }
-}
+void loop() { }
