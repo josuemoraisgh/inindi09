@@ -48,8 +48,8 @@ void ledFunc() // Faz a leitura do sinal Analogico
 /*
 void sinFunc()
 {
-  const int8_t aux = round(count / NPONTOS);
-  switch (round(count / NPONTOS))
+  const int8_t aux = count % NPONTOS;
+  switch (aux)
   {
   case 0:
     analogWrite(PINPOS, (int)(255 * (AMPLITUDE / VMAX) * seno[count]));
