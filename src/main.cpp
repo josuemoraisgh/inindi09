@@ -10,7 +10,7 @@
 #define PINNEG 5
 // Valores de Funcionamento
 #define VMAX 5.0
-#define NPONTOS (20 - 1) // QUANTIDADE DE PONTOS - 1
+#define NPONTOS (20-1) // QUANTIDADE DE PONTOS
 const int PONTOS[] = {0, 2 * NPONTOS, 2 * NPONTOS, 4 * NPONTOS};
 #define Freq 15.0
 #define T (1.0 / Freq)
