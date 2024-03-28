@@ -26,7 +26,6 @@ void threads() {
 
 void threadSetup(void (*callback)(), int threadInterval, ...) {
   va_list args;
-  va_start(args, threadInterval);
 
   thread[0].time = 0;
   thread[0].func = callback;
@@ -39,6 +38,7 @@ void threadSetup(void (*callback)(), int threadInterval, ...) {
     thread[i].interval = va_arg(args, int);
   }
   va_end(args);
+  
   Timer1.initialize(1000); // Tempo em microsegundos da base das threads
   Timer1.attachInterrupt(threads);  
 }
